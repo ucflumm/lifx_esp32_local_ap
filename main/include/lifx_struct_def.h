@@ -2,6 +2,15 @@
 #define LIFX_STRUCT_DEF_H
 #include <stdint.h>
 
+#define PROTOCOL_NUMBER 1024
+#define ADDRESSABLE true
+#define TAGGED false
+
+typedef enum {
+    MSG_SET_COLOR = 102,  // Example message type
+    MSG_SET_POWER = 117
+} lifx_message_type_t;
+
 // LIFX Frame Header
 typedef struct {
     uint16_t size;            // 16-bit size of the entire message
@@ -31,30 +40,22 @@ typedef struct {
 
 // Complete LIFX Message
 typedef struct {
-    lifx_frame_header_t     frame;
-    lifx_frame_address_t    frame_address;
-    lifx_protocol_header_t  protocol_header;
-    char                    payload[];  // Variable-length payload
+    lifx_frame_t frame;
+    lifx_frame_address_t frame_address;
+    lifx_protocol_header_t protocol_header;
+    uint8_t payload[];  // Variable length payload based on message type
 } lifx_message_t;
 
 typedef struct {
-    uint8_t service;
-    uint16_t port;
-} lifx_state_service_t;
+    uint16_t level; // 0-65535 (0-100%)
+    uint32_t duration;
+} lifx_set_power_t;
 
-typedef struct {
-    uint16_t level;      // 0 for off, 65535 for on
-    uint32_t duration;   // Duration to perform the power transition in milliseconds
-} lifx_set_power_payload_t;
-
-typedef struct {
-    lifx_header_t header;
-    uint8_t target[8];       // Target device address
-    uint8_t reserved[6];     // Reserved bytes set to zero
-    uint8_t res_required;    // 1 if response is required
-    uint8_t ack_required;    // 1 if acknowledgment is required
-    uint8_t sequence;        // Sequence number to match request with response
-    lifx_set_power_payload_t payload;
-} lifx_set_power_message_t;
+typedef struct lifx_device {
+    char ip[16];       // To store the IP address as a string
+    uint8_t service;   // Service type
+    uint32_t port;     // Port number
+    struct lifx_device *next; // Pointer to the next node
+} lifx_device_t;
 
 #endif

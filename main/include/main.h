@@ -18,4 +18,8 @@
 void receive_responses();
 void send_discovery_message();
 
+lifx_device_t *add_device_to_list(lifx_device_t **head, const char *ip, uint32_t port, uint8_t service);
+void remove_device(lifx_device_t **head, const char *ip);
+lifx_device_t *find_device(lifx_device_t *head, const char *ip);
+
 #endif
