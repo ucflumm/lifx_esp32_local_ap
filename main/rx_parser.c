@@ -25,6 +25,7 @@ void receive_responses() {
                 printf("Service: %d, Port: %u\n", service_info->service, ntohs(service_info->port));
             }
         }
+        vTaskDelay(10 / portTICK_PERIOD_MS);
     }
 
     close(sock);
