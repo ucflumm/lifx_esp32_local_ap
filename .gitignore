@@ -5,3 +5,4 @@ sdkconfig.old
 .devcontainer/Dockerfile
 .devcontainer/devcontainer.json
 dependencies.lock
+main/include/wifi_cred.h
