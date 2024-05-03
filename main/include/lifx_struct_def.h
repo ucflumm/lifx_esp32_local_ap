@@ -48,7 +48,7 @@ typedef struct {
 } lifx_set_power_payload_t;
 
 typedef struct {
-    lifx_header_t header;
+    lifx_frame_header_t header;
     uint8_t target[8];       // Target device address
     uint8_t reserved[6];     // Reserved bytes set to zero
     uint8_t res_required;    // 1 if response is required
