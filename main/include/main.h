@@ -13,5 +13,7 @@
 
 void receive_responses();
 void send_discovery_message();
+void console_task(void *pvParameters);
+void register_commands(void);
 
 #endif

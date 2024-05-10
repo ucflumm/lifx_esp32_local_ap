@@ -11,6 +11,8 @@
 void app_main(void)
 {
     wifi_manager_init(SSID, PASSWORD);
+
+    xTaskCreate(console_task, "console_task", 4096, NULL, 10, NULL);
     xTaskCreate(send_discovery_message, "send_discovery", 2048, NULL, 5, NULL);
     xTaskCreate(receive_responses, "receive_responses", 4096, NULL, 5, NULL);
 }
