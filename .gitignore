@@ -7,3 +7,4 @@ sdkconfig.old
 dependencies.lock
 main/include/wifi_cred.h
 main/include/wifi_cred.h
+managed_components/
