@@ -1,6 +1,8 @@
 #ifndef LIFX_STRUCT_DEF_H
 #define LIFX_STRUCT_DEF_H
+
 #include <stdint.h>
+#include <netinet/in.h>
 
 // LIFX Frame Header
 typedef struct {
@@ -56,5 +58,38 @@ typedef struct {
     uint8_t sequence;        // Sequence number to match request with response
     lifx_set_power_payload_t payload;
 } lifx_set_power_message_t;
+
+typedef struct {
+    uint8_t service;
+    uint16_t port;
+} ServiceData;
+
+typedef enum {
+    TYPE_SERVICE,
+    TYPE_LIGHT_STATE,
+    // Add other types
+} MessageType;
+
+typedef struct {
+    // Assume this has fields relevant to the light's state
+    int brightness;
+    char label[32];
+} LightStateData;
+
+// Add more structures as needed for other message types
+
+typedef union {
+    ServiceData service;
+    LightStateData lightState;
+    // Add more as needed
+} MessageData;
+
+typedef struct lifx_device {
+    struct in_addr ip;            // IP address of the device
+    MessageData data;             // Union of all possible data types
+    struct lifx_device *next;     // Pointer to the next device in the list
+} lifx_device_t;
+
+extern lifx_device_t *head;
 
 #endif
