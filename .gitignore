@@ -6,3 +6,4 @@ sdkconfig.old
 .devcontainer/devcontainer.json
 dependencies.lock
 .component_hash
+managed_components/
