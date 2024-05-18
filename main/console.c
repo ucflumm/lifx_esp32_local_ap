@@ -32,6 +32,7 @@ void console_task(void *pvParameters) {
 
     ESP_ERROR_CHECK(esp_console_start_repl(repl));
     register_commands();
+    vTaskDelay(100 / portTICK_PERIOD_MS); // Keep the task running indefinitely (until user exits REPL
 
     vTaskDelete(NULL); // Clean up the task if exited
 }

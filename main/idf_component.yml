@@ -1,6 +1,6 @@
 ## IDF Component Manager Manifest File
 dependencies:
-  ucflumm/simple_wifi: "=*"
+  ucflumm/simple_wifi: ">=1.0.4"
   ## Required IDF version
   idf:
     version: ">=4.1.0"

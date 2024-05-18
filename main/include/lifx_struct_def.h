@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <netinet/in.h>
 
+#pragma pack(push, 1)
 // LIFX Frame Header
 typedef struct {
     uint16_t size;            // 16-bit size of the entire message
@@ -89,6 +90,8 @@ typedef struct lifx_device {
     MessageData data;             // Union of all possible data types
     struct lifx_device *next;     // Pointer to the next device in the list
 } lifx_device_t;
+
+#pragma pack(pop)
 
 extern lifx_device_t *head;
 
