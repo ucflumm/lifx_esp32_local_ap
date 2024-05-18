@@ -1,0 +1,15 @@
+dependencies:
+  idf:
+    component_hash: null
+    source:
+      type: idf
+    version: 5.2.0
+  ucflumm/simple_wifi:
+    component_hash: 1d60143777e589271e02505a02e6464b5ab644e086ab09eaba41b1594c72d30e
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.0.4
+manifest_hash: 90b985618f931d06dc74543bf421dbeca3484cb807dbac745e6f9ad58798d6ab
+target: esp32
+version: 1.0.0

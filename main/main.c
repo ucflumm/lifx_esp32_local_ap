@@ -18,7 +18,7 @@ void app_main(void)
 {
     initialize_console();
     register_commands();
-    wifi_init_sta(SSID, PASSWORD);
+    wifi_manager_init(SSID, PASSWORD);
     // Initialize the UDP socket for broadcasting and listening
     int sock = init_udp_socket(true, 56700); // Enable broadcast on port 56700
     if (sock < 0) {

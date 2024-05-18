@@ -5,6 +5,10 @@
 #include "argtable3/argtable3.h"
 #include "driver/uart.h"
 #include "esp_console.h"
+#include <unistd.h>
+#include <stdint.h>
+#include "esp_vfs.h"
+#include "vfs/vfs_uart.h"
 
 void initialize_console(void) {
     /* Drain stdout before reconfiguring it */
