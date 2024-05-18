@@ -1,0 +1,8 @@
+description: Wifi connection component for ESP-IDF only requires SSID and Password
+license: MIT
+repository: git://github.com/ucflumm/simple_wifi.git
+repository_info:
+  commit_sha: 14220e537ee569a0d9a3e5e5f986361b0a214880
+  path: .
+url: https://github.com/ucflumm/simple_wifi.git
+version: 1.0.4
