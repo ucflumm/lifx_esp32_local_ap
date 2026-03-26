@@ -41,15 +41,18 @@ void update_device_data(lifx_device_t *device, const MessageData *data, MessageT
 }
 
 void handle_message(struct in_addr ip, const MessageData *data, MessageType type) {
+    xSemaphoreTake(device_list_mutex, portMAX_DELAY);
     lifx_device_t *device = find_or_create_device(ip);
     if (device) {
         update_device_data(device, data, type);
     } else {
         printf("Error: Failed to create or find a device entry\n");
     }
+    xSemaphoreGive(device_list_mutex);
 }
 
 void cleanup_devices() {
+    xSemaphoreTake(device_list_mutex, portMAX_DELAY);
     lifx_device_t *current = head;
     while (current != NULL) {
         lifx_device_t *next = current->next;
@@ -57,4 +60,5 @@ void cleanup_devices() {
         current = next;
     }
     head = NULL;
+    xSemaphoreGive(device_list_mutex);
 }

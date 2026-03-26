@@ -4,7 +4,7 @@
 
 static const char *TAG = "rx_parser";
 
-void receive_responses() {
+void receive_responses(void *pvParameters) {
     int sock = socket(AF_INET, SOCK_DGRAM, 0);
     if (sock < 0) {
         ESP_LOGE(TAG, "Failed to create socket\n");

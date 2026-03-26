@@ -7,27 +7,28 @@ static uint8_t seq_counter = 0;
 
 void send_discovery_message(void *pvParameters) {
     TickType_t xLastWakeTime = xTaskGetTickCount();
-    
+
+    // Create socket once and reuse it across all iterations
+    int sock = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sock < 0) {
+        ESP_LOGE(TAG, "Failed to create socket — discovery task cannot run");
+        vTaskDelete(NULL);
+        return;
+    }
+
+    ESP_LOGI(TAG, "Socket created in tx");
+
+    // Allow broadcast
+    int broadcast = 1;
+    setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast));
+
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(LIFX_PORT);
+    inet_pton(AF_INET, BROADCAST_IP, &addr.sin_addr);
+
     while (1) {
-        
-        int sock = socket(AF_INET, SOCK_DGRAM, 0);
-        if (sock < 0) {
-            printf("Failed to create socket\n");
-            return;
-        }
-
-        ESP_LOGI(TAG, "Socket created in tx\n");
-
-        // Allow broadcast
-        int broadcast = 1;
-        setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast));
-
-        struct sockaddr_in addr;
-        memset(&addr, 0, sizeof(addr));
-        addr.sin_family = AF_INET;
-        addr.sin_port = htons(LIFX_PORT);
-        inet_pton(AF_INET, BROADCAST_IP, &addr.sin_addr);
-
         lifx_message_t message;
         memset(&message, 0, sizeof(message));
         message.frame.size = sizeof(message);
@@ -38,24 +39,21 @@ void send_discovery_message(void *pvParameters) {
         message.frame.source = 4096;
         memset(&message.frame_address.target, 0, sizeof(message.frame_address.target));
         message.frame_address.res_required = 0;
-        message.frame_address.ack_required = 1;
+        message.frame_address.ack_required = 0; // No ack on broadcast discovery
         if (seq_counter == 255) seq_counter = 0; // Reset sequence number (8-bit)
         message.frame_address.sequence = seq_counter++;
-        message.protocol_header.type = 2;
-          // MessageType: GetService
-        
+        message.protocol_header.type = 2; // MessageType: GetService
+
         log_hex(&message, sizeof(message));
 
         if (sendto(sock, &message, sizeof(message), 0, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
-            printf("Failed to send message\n");
+            ESP_LOGE(TAG, "Failed to send discovery message");
         } else {
-            ESP_LOGI(TAG, "Sent discovery message\n");
+            ESP_LOGI(TAG, "Sent discovery message");
         }
 
-        close(sock);
         vTaskDelayUntil(&xLastWakeTime, 30000 / portTICK_PERIOD_MS);
     }
-    
 }
 
 void log_hex(const void* data, size_t data_len) {

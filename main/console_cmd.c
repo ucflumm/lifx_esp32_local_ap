@@ -1,6 +1,7 @@
 #include "esp_console.h"
 #include "esp_log.h"
-#include "include/lifx_struct_def.h"  // Assuming this is where lifx_device_t is defined
+#include "include/lifx_struct_def.h"
+#include "include/main.h"
 
 static int cmd_hello(int argc, char **argv) {
     printf("Hello ESP-IDF!\n");
@@ -18,6 +19,7 @@ static int cmd_echo(int argc, char **argv) {
 
 static int list_lights(int argc, char** argv) {
     printf("Listing all registered LIFX devices:\n");
+    xSemaphoreTake(device_list_mutex, portMAX_DELAY);
     lifx_device_t* current = head;
     int device_count = 0;
     while (current != NULL) {
@@ -28,6 +30,7 @@ static int list_lights(int argc, char** argv) {
                current->data.service.port);
         current = current->next;
     }
+    xSemaphoreGive(device_list_mutex);
     if (device_count == 0) {
         printf("No LIFX devices found.\n");
     }
